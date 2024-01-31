@@ -12,7 +12,14 @@ load_dotenv()
 
 embeddings = OpenAIEmbeddings()
 index_collection_name = os.getenv("INDEX_COLLECTION_NAME")
-path_lineamientos = os.getenv("PATH_LINEAMIENTOS")
+adrs_path = os.getenv("ADRS_PATH")
+
+print("----------------ENV---------------------")
+
+for key, value in os.environ.items():
+    print(f"{key}={value}")
+
+print("----------------ENV---------------------")
 
 chunk_size_default = 1000
 chunk_overlap_default = 200
@@ -40,7 +47,7 @@ def store_embed_documents(client_store:VectorStore, documents: Iterable[Document
 # Main
 def main():
     print("Cargando datos...")
-    docs = load_documents(path_lineamientos)
+    docs = load_documents(adrs_path)
     print(f"{len(docs)} documentos obtenidos.")
 
     print("Generando splits...")

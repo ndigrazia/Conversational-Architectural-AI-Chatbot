@@ -1,25 +1,23 @@
-# README #
+# Conversational Architecture AI Chatbot - Indexing
 
-Chatbot Arquitectura Hispam - Indexing
+## Description 
 
-### Description ###
+ An embedding service turns data from images, text, or audio into a list of integers (a vector). This service accepts ADRs from a external source. The information sources must be *.md files.
 
-* Proyecto para la ingesta de lineamientos desde una fuente externa y su indexación.
-* Base de datos vectorial: Chroma.
-* Modelo de generación de embeddings: OpenAI.
-* Versión: 1.0
+* Database: Chroma  (https://docs.trychroma.com/).
+* Embeddings LLM: OpenAI.
 
-### Runtime ###
+## Runtime 
 * Python 3.12.0
 
-### Environment variables ###
-* OPENAI_API_KEY = Clave de API de OpenAI usado para el trabajo con embeddings y respuestas generativas.
-* CHROMA_HOST = Hostname de la instancia de Chromadb.
-* CHROMA_PORT = Puerto de la instancia de Chromadb.
-* INDEX_COLLECTION_NAME = Nombre de la colección que contiene los embeddings de los lineamientos.
-* PATH_LINEAMIENTOS = Ruta de la carpeta que contiene los lineamientos en formato *.md.
+## Environment variables 
+* OPENAI_API_KEY = OpenAI's API Key.
+* CHROMA_HOST = Chromadb's hostname.
+* CHROMA_PORT = Chromadb's port.
+* INDEX_COLLECTION_NAME = Collection where you'll store your embeddings.
+* ADRS_PATH = Path with *.md files.
 
-### Libraries ###
+## Libraries 
 
 * langchain==0.1.1
 * langchain-community==0.0.13
@@ -31,6 +29,14 @@ Chatbot Arquitectura Hispam - Indexing
 * fastapi==0.109.0
 * python-dotenv==1.0.0
 
-### Owner ###
+## Make a container 
 
-* Equipo Cloud - Arquitectura Hispam
+```bash
+docker build . -t ca-chatbot-indexing:0.1
+```
+
+## Run a container 
+
+```bash
+docker run --net=ca-chatbot-net --name indexing -e OPENAI_API_KEY=<an-api-key> -e CHROMA_HOST=chromadb -e CHROMA_PORT=8000 -e INDEX_COLLECTION_NAME=adrs -e ADRS_PATH=/adrs -v <a-local-path>/adrs:/adrs -d ca-chatbot-indexing:0.1
+```
