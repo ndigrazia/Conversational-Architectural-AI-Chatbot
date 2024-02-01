@@ -1,4 +1,4 @@
-# Conversational Architecture AI - Retrieval and generation (RAG)
+# Conversational Architectural AI Chatbot - Retrieval and generation (RAG)
 
 ## Description 
 

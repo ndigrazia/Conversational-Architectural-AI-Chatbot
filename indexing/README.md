@@ -1,4 +1,4 @@
-# Conversational Architecture AI Chatbot - Indexing
+# Conversational Architectural AI Chatbot - Indexing
 ## Description 
 
  An embedding service turns data from images, text, or audio into a list of integers (a vector). This service accepts ADRs from a external source. The information sources must be *.md files.
