@@ -10,16 +10,16 @@ from typing import Iterable, List, Optional
 
 load_dotenv()
 
-embeddings = OpenAIEmbeddings()
-index_collection_name = os.getenv("INDEX_COLLECTION_NAME")
-adrs_path = os.getenv("ADRS_PATH")
-
 print("----------------ENV---------------------")
 
 for key, value in os.environ.items():
     print(f"{key}={value}")
 
 print("----------------ENV---------------------")
+
+embeddings = OpenAIEmbeddings()
+index_collection_name = os.getenv("INDEX_COLLECTION_NAME")
+adrs_path = os.getenv("ADRS_PATH")
 
 chunk_size_default = 1000
 chunk_overlap_default = 200

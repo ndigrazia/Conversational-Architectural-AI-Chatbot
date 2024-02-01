@@ -1,6 +1,7 @@
 from core.responses import Response
 from langchain_core.documents.base import Document
 from typing import List
+import re
 
 class QAResponse(Response):
     @property
@@ -23,7 +24,19 @@ class QAResponse(Response):
         return list(references_set)
     
     def to_printable_references(self) -> str:
-        str_references = "Referencias: "
+        str_references = "References: "
         for reference in self.references:
             str_references += "\n- " + reference
         return str_references
+
+    def to_link_references(self) -> List[str]:
+        link_references = []
+        for reference in self.references:
+            # Extract the string from the file path
+            match = re.search(r'([^/]+)\.(md|pdf)$', reference)
+            extracted_string = "Upps!, undefined file name"
+            if match:
+                extracted_string = match.group(1)
+            link = '[' + extracted_string + '](http://localhost:9090/app/static' + reference + ')' 
+            link_references.append(link)
+        return link_references

@@ -1,0 +1,23 @@
+version: '3.9'
+
+networks:
+  net:
+    driver: bridge
+
+services:
+
+  chromadb:
+      image: chromadb/chroma:0.4.22.dev44
+      volumes:
+        - chroma:/chroma/chroma
+      environment:
+        - IS_PERSISTENT=TRUE
+        - ANONYMIZED_TELEMETRY=TRUE 
+      ports:
+        - 8000:8000
+      networks:
+        - net
+
+volumes:
+  chroma:
+    driver: local

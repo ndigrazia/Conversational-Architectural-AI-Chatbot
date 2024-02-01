@@ -18,9 +18,9 @@ def main():
     answer_generator = AnswerGenerator(retriever)
 
     while(True):
-        question = input("Pregunta: ")
+        question = input("Question: ")
         qa_response = answer_generator.get_answer(question)
-        print("Respuesta: " + qa_response.answer)
+        print("Answer: " + qa_response.answer)
         print(qa_response.to_printable_references())
 
 main()
