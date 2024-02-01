@@ -1,4 +1,8 @@
-# Conversational Architecture AI Chatbot
+# Conversational Architectural AI Chatbot
+
+## Overview
+
+![image info](./conversational-architectural-ai-chatbot.drawio.png)
 
 ## Vector database
 
