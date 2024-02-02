@@ -23,18 +23,30 @@ docker network create ca-chatbot-net
 ```bash
 docker pull chromadb/chroma:0.4.22.dev44
 
-docker run --net=ca-chatbot-net -d --rm --name chromadb -p 8000:8000 -v ./chroma:/chroma/chroma -e IS_PERSISTENT=TRUE -e ANONYMIZED_TELEMETRY=TRUE chromadb/chroma:0.4.22.dev44
-```
+docker build ./chromadb -t ca-chatbot-chromadb:0.1
 
+docker run --net=ca-chatbot-net -d --rm --name chromadb -p 8000:8000 -v ./chroma:/chroma/chroma -e IS_PERSISTENT=TRUE -e ANONYMIZED_TELEMETRY=TRUE ca-chatbot-chromadb:0.1
+```
 ## Indexing Service
 
 Our embedding service transforms information sourced from external providers into numerical vectors. This service is capable of processing data in various formats, including images, text, or audio, and converting them into lists of integers, representing the embedded features.
 
 See more [Readme file](./indexing/README.md).
 
-
 ## Rag Service
 
 Our Rag service is like your go-to problem solver when you have questions. It's all powered by LLM's function-calling magic, making sure you get the answers you need in a snap.
 
 See more [Readme file](./rag/README.md).
+
+## Start all services
+
+First of all, create /adrs and ./chroma folders.
+
+After that, copy your adrs files to ./adrs.
+
+Finally, run:
+
+```bash
+docker-compose up -d --build
+```

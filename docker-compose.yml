@@ -7,17 +7,71 @@ networks:
 services:
 
   chromadb:
-      image: chromadb/chroma:0.4.22.dev44
+      build:
+        context: ./chromadb
+        dockerfile: Dockerfile
+      image: ${CHROMADB_IMAGE}
+      container_name: chromadb
       volumes:
-        - chroma:/chroma/chroma
+        - ./chroma:/chroma/chroma
       environment:
         - IS_PERSISTENT=TRUE
         - ANONYMIZED_TELEMETRY=TRUE 
       ports:
         - 8000:8000
+      healthcheck:
+        test: curl --fail http://localhost:8000/api/v1/heartbeat || exit 1
+        interval: 20s
+        retries: 5
+        start_period: 60s
+        timeout: 5s
+      networks:
+        - net
+
+  ca-chatbot-rag:
+      build:
+        context: ./rag
+        dockerfile: Dockerfile
+      image: ${CHATBOT_RAG_IMAGE}
+      container_name: ca-chatbot-rag
+      environment:
+        - CHROMA_HOST=chromadb
+        - INDEX_COLLECTION_NAME=adrs
+        - STREAMLIT_SERVER_ENABLE_STATIC_SERVING=true
+        - CHROMA_PORT=8000
+        - OPENAI_API_KEY=${OPENAI_API_KEY}
+      volumes:
+        - ./adrs:/app/static/adrs
+      ports:  
+        - 9090:9090
+      depends_on:
+        chromadb:
+           condition: service_healthy
+      networks:
+        - net
+        
+  ca-chatbot-indexing:
+      build:
+        context: ./indexing
+        dockerfile: Dockerfile
+      image: ${CHATBOT_INDEXING_IMAGE}
+      container_name: ca-chatbot-indexing
+      environment:
+        - CHROMA_HOST=chromadb
+        - INDEX_COLLECTION_NAME=adrs
+        - CHROMA_PORT=8000
+        - OPENAI_API_KEY=${OPENAI_API_KEY}
+        - ADRS_PATH=/adrs
+      volumes:
+        - ./adrs:/adrs
+      depends_on:
+        chromadb:
+           condition: service_healthy
       networks:
         - net
 
 volumes:
   chroma:
+    driver: local
+  adrs:
     driver: local
