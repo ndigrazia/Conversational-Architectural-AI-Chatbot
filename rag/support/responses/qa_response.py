@@ -4,6 +4,9 @@ from typing import List
 import re
 
 class QAResponse(Response):
+
+    BASE_URL = "http://localhost:9090/app/static"
+
     @property
     def query(self) -> List[str]:
         return self._query
@@ -37,6 +40,6 @@ class QAResponse(Response):
             extracted_string = "Upps!, undefined file name"
             if match:
                 extracted_string = match.group(1)
-            link = '[' + extracted_string + '](http://localhost:9090/app/static' + reference + ')' 
+            link = f"[{extracted_string}]({self.BASE_URL}{reference})"
             link_references.append(link)
         return link_references

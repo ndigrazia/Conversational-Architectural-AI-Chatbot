@@ -7,8 +7,6 @@ from support.responses.qa_response import QAResponse
 from support.vectorstore_connectors.chroma import ChromaConnector
 from langchain_openai import OpenAIEmbeddings
 
-from support.responses.content import Content
-
 load_dotenv()
 
 print("----------------ENV---------------------")
@@ -17,6 +15,12 @@ for key, value in os.environ.items():
     print(f"{key}={value}")
 
 print("----------------ENV---------------------")
+
+def show_resume(obj):
+    st.markdown(obj["answer"])
+    st.markdown("References:")
+    for link in obj["link_reference"]:
+        st.markdown(link, unsafe_allow_html=True)
 
 embeddings = OpenAIEmbeddings()
 index_collection_name = os.getenv("INDEX_COLLECTION_NAME")
@@ -39,22 +43,18 @@ for message in st.session_state.messages:
     if message["role"] == "assistant":
         with st.chat_message(message["role"]):
              obj = message["content"]
-             st.markdown(obj.answer)
-             st.markdown("References:")
-             for link in obj.references:
-                st.markdown(link, unsafe_allow_html=True)
+             show_resume(obj)
 
 if prompt := st.chat_input("Go ahead, hit me with your question. What's on your mind?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
     with st.chat_message("assistant"):
-        contents = []
         response = answer_generator.get_answer(prompt)
-        obj = Content(response.answer, response.to_link_references())
-        st.markdown(obj.answer)
-        st.markdown("References:")
-        for link in obj.references:
-            st.markdown(link, unsafe_allow_html=True)
-
+        obj = {
+            "answer": response.answer,
+            "link_reference": response.to_link_references()
+        }
+        show_resume(obj)
     st.session_state.messages.append({"role": "assistant", "content": obj})
+
