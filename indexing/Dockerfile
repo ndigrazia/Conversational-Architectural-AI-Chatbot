@@ -23,15 +23,12 @@ RUN touch /var/log/cron.log
 
 WORKDIR /app
 
-RUN crontab -l | { cat; echo "*/1 * * * * /bin/bash -c '/app/script.sh' >> /var/log/cron.log 2>&1"; } | crontab -
+RUN crontab -l | { cat; echo "*/1 * * * * /usr/local/bin/python /app/app.py >> /var/log/cron.log 2>&1"; } | crontab -
 
 COPY --from=builder /install /usr/local
 
 # COPY --chown=papus:papus . /app
 COPY . /app
 
-RUN chmod +x /app/script.sh
-
 # USER papus
-
-CMD cron && tail -f /var/log/cron.log
+CMD  printenv | grep -v "no_proxy" >> /etc/environment && cron && tail -f /var/log/cron.log
