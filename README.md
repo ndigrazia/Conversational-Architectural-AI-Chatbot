@@ -50,3 +50,7 @@ Finally, run:
 ```bash
 docker-compose up -d --build
 ```
+
+## Access to Conversational Architectural AI Chatbot
+
+Goto http://\<your-host\>:9090 and enjoy it!
