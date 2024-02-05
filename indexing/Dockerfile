@@ -23,7 +23,8 @@ RUN touch /var/log/cron.log
 
 WORKDIR /app
 
-RUN crontab -l | { cat; echo "*/1 * * * * /usr/local/bin/python /app/app.py >> /var/log/cron.log 2>&1"; } | crontab -
+# Run every day at 08:00 o'clock
+RUN crontab -l | { cat; echo "0 8 * * * /usr/local/bin/python /app/app.py >> /var/log/cron.log 2>&1"; } | crontab -
 
 COPY --from=builder /install /usr/local
 
