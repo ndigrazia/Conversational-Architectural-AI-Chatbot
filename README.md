@@ -52,6 +52,38 @@ mkdir ./chroma
 
 These commands create two directories named adrs and chroma.
 
+### Set environment variables in a .env file:
+
+These variables are used in a configuration file (.env) to set up and run containers. Here's a breakdown of the variables:
+
+OPENAI_API_KEY_INDEXING: This variable probably holds the API key for OpenAI used in the indexing process. Ensure you replace the placeholder with your actual OpenAI API key.
+
+OPENAI_API_KEY_RAG: This variable likely holds the API key for OpenAI's Retrieval-Augmented Generation (RAG) model. Replace the placeholder with your actual OpenAI API key.
+
+CHROMADB_IMAGE: Specifies the Docker image for the ChromaDB service. Docker images are used to package applications and their dependencies.
+
+CHATBOT_RAG_IMAGE: Specifies the Docker image for the chatbot using the RAG model.
+
+CHATBOT_INDEXING_IMAGE: Specifies the Docker image for the chatbot indexing process. 
+
+To set these environment variables inside a .env file, you can create or edit the file with the following content:
+
+Create a file named .env and add the following lines:
+
+```bash
+OPENAI_API_KEY_INDEXING=<your_indexing_api_key>
+OPENAI_API_KEY_RAG=<your_rag_api_key>
+CHROMA_HOST=localhost
+CHROMA_PORT=8000
+INDEX_COLLECTION_NAME=adrs
+STREAMLIT_SERVER_PORT=9090
+STREAMLIT_SERVER_ENABLE_STATIC_SERVING=true
+```
+
+Make sure to replace <your_indexing_api_key> and <your_rag_api_key> with your actual OpenAI API keys.
+
+After setting these variables, you can use them in your scripts or configuration files for running Docker containers or other relevant processes.
+
 ### Pull Docker images:
 
 ```bash
