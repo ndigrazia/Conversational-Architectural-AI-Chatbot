@@ -41,7 +41,7 @@ See more [Readme file](./rag/README.md).
 
 ## Start all services
 
-First of all, create /adrs and ./chroma folders.
+First of all, create ./adrs and ./chroma folders.
 
 After that, copy your adrs files to ./adrs.
 
