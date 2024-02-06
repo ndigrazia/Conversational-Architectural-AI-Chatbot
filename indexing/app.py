@@ -27,7 +27,8 @@ add_start_index_default = True
 
 # Indexing: Load
 def load_documents(path: str) -> List[Document]:
-    loader = DirectoryLoader(path, glob="**/*.md", loader_cls=UnstructuredMarkdownLoader)
+    # Load both Markdown and PDF files from the directory, excluding README.md
+    loader = DirectoryLoader(path, glob="**/*.!(README).{md,pdf}", loader_cls=[UnstructuredMarkdownLoader, PDFLoader])
     return loader.load()
 
 # Indexing: Split
