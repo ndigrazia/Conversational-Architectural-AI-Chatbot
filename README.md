@@ -51,6 +51,6 @@ Finally, run:
 docker-compose up -d --build
 ```
 
-## Access to Conversational Architectural AI Chatbot
+## Discover the Chatbot
 
-Goto http://\<your-host\>:9090 and enjoy it!
+Explore the Conversational Architectural AI Chatbot by accessing it at http://\<your-host\>:9090 and enjoy it!. Immerse yourself in its capabilities and enjoy the interaction!
