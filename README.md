@@ -39,13 +39,45 @@ Our Rag service is like your go-to problem solver when you have questions. It's 
 
 See more [Readme file](./rag/README.md).
 
-## Start all services
+## Start all services from docker.io
 
-First of all, create ./adrs and ./chroma folders.
+Here is a step-by-step breakdown of the provided instructions:
 
-After that, copy your adrs files to ./adrs.
+### Create folders:
 
-Finally, run:
+```bash
+mkdir ./adrs
+mkdir ./chroma
+```
+
+These commands create two directories named adrs and chroma.
+
+### Pull Docker images:
+
+```bash
+docker pull ndigrazia/ca-chatbot-indexing:0.1
+docker pull ndigrazia/ca-chatbot-rag:0.1
+docker pull ndigrazia/ca-chatbot-chromadb:0.1
+```
+
+These commands pull Docker images from Docker Hub. 
+
+### Copy ADRs files:
+
+Copy your ADRs (Architectural Decision Records) files to the ./adrs directory.
+
+###  Run Docker Compose:
+
+```bash
+docker-compose up -d
+```
+
+This command uses Docker Compose to start the services defined in the docker-compose.yml file in detached mode (-d).
+
+Make sure you have Docker and Docker Compose installed on your system before running these commands. Additionally, ensure that the required ADRs files are placed in the ./adrs directory before starting the services.
+
+
+## Initialize all services anew
 
 ```bash
 docker-compose up -d --build

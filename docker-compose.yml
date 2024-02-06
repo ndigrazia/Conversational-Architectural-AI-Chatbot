@@ -39,7 +39,7 @@ services:
         - INDEX_COLLECTION_NAME=adrs
         - STREAMLIT_SERVER_ENABLE_STATIC_SERVING=true
         - CHROMA_PORT=8000
-        - OPENAI_API_KEY=${OPENAI_API_KEY}
+        - OPENAI_API_KEY=${OPENAI_API_KEY_RAG}
       volumes:
         - ./adrs:/app/static/adrs
       ports:  
@@ -60,7 +60,7 @@ services:
         - CHROMA_HOST=chromadb
         - INDEX_COLLECTION_NAME=adrs
         - CHROMA_PORT=8000
-        - OPENAI_API_KEY=${OPENAI_API_KEY}
+        - OPENAI_API_KEY=${OPENAI_API_KEY_INDEXING}
         - ADRS_PATH=/adrs
       volumes:
         - ./adrs:/adrs

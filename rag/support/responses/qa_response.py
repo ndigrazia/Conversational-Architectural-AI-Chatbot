@@ -37,7 +37,7 @@ class QAResponse(Response):
         for reference in self.references:
             # Extract the string from the file path
             match = re.search(r'([^/]+)\.(md|pdf)$', reference)
-            extracted_string = "Upps!, undefined file name"
+            extracted_string = "Ups! Undefined file name."
             if match:
                 extracted_string = match.group(1)
             link = f"[{extracted_string}]({self.BASE_URL}{reference})"
