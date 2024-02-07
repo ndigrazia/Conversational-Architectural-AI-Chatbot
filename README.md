@@ -66,6 +66,8 @@ CHATBOT_RAG_IMAGE: Specifies the Docker image for the chatbot using the RAG mode
 
 CHATBOT_INDEXING_IMAGE: Specifies the Docker image for the chatbot indexing process. 
 
+BASE_URL: Specifies the actual base path.
+
 To set these environment variables inside a .env file, you can create or edit the file with the following content:
 
 Create a file named .env and add the following lines:
@@ -78,9 +80,12 @@ CHROMA_PORT=8000
 INDEX_COLLECTION_NAME=adrs
 STREAMLIT_SERVER_PORT=9090
 STREAMLIT_SERVER_ENABLE_STATIC_SERVING=true
+BASE_URL=http://<base_path>:9090/app/static
 ```
 
 Make sure to replace <your_indexing_api_key> and <your_rag_api_key> with your actual OpenAI API keys.
+
+Make sure to replace <base_path> with your actual base path.
 
 After setting these variables, you can use them in your scripts or configuration files for running Docker containers or other relevant processes.
 

@@ -2,10 +2,12 @@ from core.responses import Response
 from langchain_core.documents.base import Document
 from typing import List
 import re
+import os
 
 class QAResponse(Response):
 
-    BASE_URL = "http://localhost:9090/app/static"
+   #BASE_URL = "http://localhost:9090/app/static"
+    BASE_URL = os.getenv("BASE_URL")
 
     @property
     def query(self) -> List[str]:

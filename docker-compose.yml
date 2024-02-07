@@ -40,6 +40,7 @@ services:
         - STREAMLIT_SERVER_ENABLE_STATIC_SERVING=true
         - CHROMA_PORT=8000
         - OPENAI_API_KEY=${OPENAI_API_KEY_RAG}
+        - BASE_URL=http://localhost:9090/app/static
       volumes:
         - ./adrs:/app/static/adrs
       ports:  
