@@ -33,11 +33,11 @@ A Rag service responds to customer questions utilizing LLM's function-calling.
 ## Make a Indexing container 
 
 ```bash
-docker build . -t ca-chatbot-rag:0.1
+docker build . -t ca-chatbot-rag:0.2
 ```
 
 ## Run a Indexing container 
 
 ```bash
-docker run --rm --net=ca-chatbot-net --name ca-chatbot-rag -p 9090:9090 -e OPENAI_API_KEY=<an-api-key> -e CHROMA_HOST=chromadb -e CHROMA_PORT=8000 -e BASE_URL=http://<base_path>:9090/app/static -e INDEX_COLLECTION_NAME=adrs -e STREAMLIT_SERVER_ENABLE_STATIC_SERVING=true -v <a-local-path>/adrs:/app/static/adrs -d ca-chatbot-rag:0.1
+docker run --rm --net=ca-chatbot-net --name ca-chatbot-rag -p 9090:9090 -e OPENAI_API_KEY=<an-api-key> -e CHROMA_HOST=chromadb -e CHROMA_PORT=8000 -e BASE_URL=http://<base_path>:9090/app/static -e INDEX_COLLECTION_NAME=adrs -e STREAMLIT_SERVER_ENABLE_STATIC_SERVING=true -v <a-local-path>/adrs:/app/static/adrs -d ca-chatbot-rag:0.2
 ```

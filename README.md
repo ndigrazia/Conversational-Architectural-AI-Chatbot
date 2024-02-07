@@ -93,7 +93,7 @@ After setting these variables, you can use them in your scripts or configuration
 
 ```bash
 docker pull ndigrazia/ca-chatbot-indexing:0.1
-docker pull ndigrazia/ca-chatbot-rag:0.1
+docker pull ndigrazia/ca-chatbot-rag:0.2
 docker pull ndigrazia/ca-chatbot-chromadb:0.1
 ```
 
