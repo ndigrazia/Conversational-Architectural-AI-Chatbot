@@ -1,4 +1,5 @@
 from core.responses import Response
+from dotenv import load_dotenv
 from langchain_core.documents.base import Document
 from typing import List
 import re
@@ -6,7 +7,9 @@ import os
 
 class QAResponse(Response):
 
-   #BASE_URL = "http://localhost:9090/app/static"
+    load_dotenv()
+     
+    #BASE_URL = "http://localhost:9090/app/static"
     BASE_URL = os.getenv("BASE_URL")
 
     @property
@@ -37,11 +40,14 @@ class QAResponse(Response):
     def to_link_references(self) -> List[str]:
         link_references = []
         for reference in self.references:
+            extracted_string = "Ups! Undefined file name."
             # Extract the string from the file path
             match = re.search(r'([^/]+)\.(md|pdf)$', reference)
-            extracted_string = "Ups! Undefined file name."
             if match:
                 extracted_string = match.group(1)
-            link = f"[{extracted_string}]({self.BASE_URL}{reference})"
+            reference = reference.replace("..", "")
+            link = "[" + extracted_string + "](" + self.BASE_URL + reference + ")"
             link_references.append(link)
         return link_references
+
+        

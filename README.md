@@ -60,6 +60,10 @@ OPENAI_API_KEY_INDEXING: This variable probably holds the API key for OpenAI use
 
 OPENAI_API_KEY_RAG: This variable likely holds the API key for OpenAI's Retrieval-Augmented Generation (RAG) model. Replace the placeholder with your actual OpenAI API key.
 
+HUGGINGFACEHUB_API_TOKEN_INDEXING: This variable probably holds the API key for OpenAI used in the indexing process. Ensure you replace the placeholder with your actual HuggingFace API key.
+
+HUGGINGFACEHUB_API_TOKEN_RAG: This variable likely holds the API key for OpenAI's Retrieval-Augmented Generation (RAG) model. Replace the placeholder with your actual HuggingFace API key.
+
 CHROMADB_IMAGE: Specifies the Docker image for the ChromaDB service. Docker images are used to package applications and their dependencies.
 
 CHATBOT_RAG_IMAGE: Specifies the Docker image for the chatbot using the RAG model.
@@ -68,6 +72,10 @@ CHATBOT_INDEXING_IMAGE: Specifies the Docker image for the chatbot indexing proc
 
 BASE_URL: Specifies the actual base path.
 
+IS_OPEN_SOURCE: Specifies whether you are working with an open-source solution framework or not. 
+
+FILE_TYPE: Specifies the type of files to be loaded. Choose: md or pdf.
+
 To set these environment variables inside a .env file, you can create or edit the file with the following content:
 
 Create a file named .env and add the following lines:
@@ -75,15 +83,19 @@ Create a file named .env and add the following lines:
 ```bash
 OPENAI_API_KEY_INDEXING=<your_indexing_api_key>
 OPENAI_API_KEY_RAG=<your_rag_api_key>
+HUGGINGFACEHUB_API_TOKEN_INDEXING=<your_indexing_api_key>
+HUGGINGFACEHUB_API_TOKEN_RAG=<your_rag_api_key>
 CHROMA_HOST=localhost
 CHROMA_PORT=8000
 INDEX_COLLECTION_NAME=adrs
 STREAMLIT_SERVER_PORT=9090
 STREAMLIT_SERVER_ENABLE_STATIC_SERVING=true
 BASE_URL=http://<base_path>:9090/app/static
+IS_OPEN_SOURCE=true
+FILE_TYPE=md
 ```
 
-Make sure to replace <your_indexing_api_key> and <your_rag_api_key> with your actual OpenAI API keys.
+Make sure to replace <your_indexing_api_key> and <your_rag_api_key> with your actual API keys.
 
 Make sure to replace <base_path> with your actual base path.
 
@@ -113,6 +125,31 @@ This command uses Docker Compose to start the services defined in the docker-com
 
 Make sure you have Docker and Docker Compose installed on your system before running these commands. Additionally, ensure that the required ADRs files are placed in the ./adrs directory before starting the services.
 
+## Choose your solution framework
+
+The Conversational Architectural AI Chatbot can work with two type of frameworks. You may choose your framework by setting IS_OPEN_SOURCE variable. Assign "true" if you want to work with an open-source framework, and "false" otherwise
+
+### Open-source Solution Framework
+
+If you've chosen the open-source solution framework, please set the environment variables as follows:
+
+```bash
+HUGGINGFACEHUB_API_TOKEN_INDEXING=<your_indexing_api_key>
+HUGGINGFACEHUB_API_TOKEN_RAG=<your_rag_api_key>
+```
+
+Make sure to replace <your_indexing_api_key> and <your_rag_api_key>  with your actual HuggingFace API key.
+
+### Non-Open-source Solution Framework
+
+If you've chosen the non-open-source solution framework, please set the environment variables as follows:
+
+```bash
+OPENAI_API_KEY_INDEXING=<your_indexing_api_key>
+OPENAI_API_KEY_RAG=<your_rag_api_key>
+```
+
+Make sure to replace <your_indexing_api_key> and <your_rag_api_key>  with your actual OpenAI API key.
 
 ## Initialize all services anew
 

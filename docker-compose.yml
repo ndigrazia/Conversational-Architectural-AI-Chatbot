@@ -41,6 +41,8 @@ services:
         - CHROMA_PORT=8000
         - OPENAI_API_KEY=${OPENAI_API_KEY_RAG}
         - BASE_URL=http://localhost:9090/app/static
+        - HUGGINGFACEHUB_API_TOKEN=${HUGGINGFACEHUB_API_TOKEN_RAG}
+        - IS_OPEN_SOURCE=${IS_OPEN_SOURCE}
       volumes:
         - ./adrs:/app/static/adrs
       ports:  
@@ -63,6 +65,9 @@ services:
         - CHROMA_PORT=8000
         - OPENAI_API_KEY=${OPENAI_API_KEY_INDEXING}
         - ADRS_PATH=/adrs
+        - HUGGINGFACEHUB_API_TOKEN=${HUGGINGFACEHUB_API_TOKEN_INDEXING}
+        - IS_OPEN_SOURCE=${IS_OPEN_SOURCE}
+        - FILE_TYPE=${FILE_TYPE}
       volumes:
         - ./adrs:/adrs
       depends_on:

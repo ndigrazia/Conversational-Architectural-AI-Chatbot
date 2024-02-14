@@ -5,7 +5,9 @@ from rag.retriever import Retriever
 import streamlit as st
 from support.responses.qa_response import QAResponse
 from support.vectorstore_connectors.chroma import ChromaConnector
-from langchain_openai import OpenAIEmbeddings
+from utils.ai import create_embeddings
+#from langchain_openai import OpenAIEmbeddings
+#from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
 
 load_dotenv()
 
@@ -22,7 +24,10 @@ def show_resume(obj):
     for link in obj["link_reference"]:
         st.markdown(link, unsafe_allow_html=True)
 
-embeddings = OpenAIEmbeddings()
+#embeddings = OpenAIEmbeddings()
+#embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
+embeddings = create_embeddings()
+
 index_collection_name = os.getenv("INDEX_COLLECTION_NAME")
 
 vector_connector = ChromaConnector(embeddings, index_collection_name)

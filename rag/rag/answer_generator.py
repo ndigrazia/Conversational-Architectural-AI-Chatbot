@@ -1,14 +1,18 @@
 from dotenv import load_dotenv
 from typing import Optional
 from langchain.chains.question_answering import load_qa_chain
-from langchain_openai import OpenAI
+#from langchain_openai import OpenAI
 from rag.retriever import Retriever
 from support.responses.qa_response import QAResponse
+#from langchain import HuggingFaceHub
+from utils.ai import create_llm
 
 load_dotenv()
 
 class AnswerGenerator:
-    llm = OpenAI(temperature=0)
+    #llm = OpenAI(temperature=0)
+    #llm=HuggingFaceHub(repo_id="bigscience/bloom", model_kwargs={"temperature":1e-10})
+    llm=create_llm()
     number_of_results_default = 4
 
     @property

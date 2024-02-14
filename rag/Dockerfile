@@ -1,9 +1,14 @@
 FROM python:3.12-slim-bookworm AS builder
 
 RUN apt-get update --fix-missing && apt-get install -y --fix-missing \
-    build-essential && \
+    build-essential \
+    gcc \
+    g++ \
+    cmake \
+    autoconf \
+    pkgconf && \
     rm -rf /var/lib/apt/lists/* && \
-    mkdir /install
+    mkdir /install 
 
 WORKDIR /install
 
