@@ -10,10 +10,12 @@ from utils.ai import create_llm
 load_dotenv()
 
 class AnswerGenerator:
+
+    NUMBER_OF_RESULTS_DEFAULT = 4
+
     #llm = OpenAI(temperature=0)
     #llm=HuggingFaceHub(repo_id="bigscience/bloom", model_kwargs={"temperature":1e-10})
     llm=create_llm()
-    number_of_results_default = 4
 
     @property
     def retriever(self) -> Retriever:
@@ -21,9 +23,9 @@ class AnswerGenerator:
 
     def __init__(self, retriever: Retriever):
         self._retriever = retriever
-
+   
     def get_answer(self, question: str, 
-                   number_of_results: Optional[int] = number_of_results_default
+                   number_of_results: Optional[int] = NUMBER_OF_RESULTS_DEFAULT
                    ) -> QAResponse:
         similar_docs = self._retriever.get_similar_documents(question, number_of_results)
         chain = load_qa_chain(self.llm, chain_type="stuff")

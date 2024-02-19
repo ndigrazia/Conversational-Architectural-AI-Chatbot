@@ -43,6 +43,7 @@ services:
         - BASE_URL=http://localhost:9090/app/static
         - HUGGINGFACEHUB_API_TOKEN=${HUGGINGFACEHUB_API_TOKEN_RAG}
         - IS_OPEN_SOURCE=${IS_OPEN_SOURCE}
+        - NUMBER_OF_RESULTS=${NUMBER_OF_RESULTS}
       volumes:
         - ./adrs:/app/static/adrs
       ports:  

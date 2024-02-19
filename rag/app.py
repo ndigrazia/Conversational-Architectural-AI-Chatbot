@@ -30,10 +30,13 @@ embeddings = create_embeddings()
 
 index_collection_name = os.getenv("INDEX_COLLECTION_NAME")
 
+number_of_results = os.getenv("NUMBER_OF_RESULTS")
+
 vector_connector = ChromaConnector(embeddings, index_collection_name)
 doc_search = vector_connector.get_client()
 
 retriever = Retriever(doc_search)
+
 answer_generator = AnswerGenerator(retriever)
 
 st.title('🤖 Conversational Architectural AI Chatbot')
@@ -55,7 +58,7 @@ if prompt := st.chat_input("Go ahead, hit me with your question. What's on your 
     with st.chat_message("user"):
         st.markdown(prompt)
     with st.chat_message("assistant"):
-        response = answer_generator.get_answer(prompt)
+        response = answer_generator.get_answer(prompt, number_of_results)
         obj = {
             "answer": response.answer,
             "link_reference": response.to_link_references()
