@@ -11,6 +11,8 @@ class QAResponse(Response):
      
     #BASE_URL = "http://localhost:9090/app/static"
     BASE_URL = os.getenv("BASE_URL")
+    MARKDOWN_IN_HTML = os.getenv("MARKDOWN_IN_HTML") or "false"
+
 
     @property
     def query(self) -> List[str]:
@@ -45,8 +47,13 @@ class QAResponse(Response):
             match = re.search(r'([^/]+)\.(md|pdf)$', reference)
             if match:
                 extracted_string = match.group(1)
+                file_type = match.group(2)
+            if self.MARKDOWN_IN_HTML == "true" and file_type in ["md","MD"]:
+                file_type_to_add = ".html"
+            else:
+                file_type_to_add = "" 
             reference = reference.replace("..", "")
-            link = "[" + extracted_string + "](" + self.BASE_URL + reference + ")"
+            link = "[" + extracted_string + "](" + self.BASE_URL + reference + file_type_to_add + ")"
             link_references.append(link)
         return link_references
 

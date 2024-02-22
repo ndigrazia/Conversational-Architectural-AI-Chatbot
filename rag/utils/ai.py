@@ -13,8 +13,12 @@ def create_embeddings():
         
 def create_llm():
     if is_open_source():
-        return HuggingFaceHub(repo_id="bigscience/bloom", model_kwargs={"temperature":1e-10,
-            "max_new_tokens":200, "repetition_penalty":2.0})
+        return HuggingFaceHub(
+                repo_id="bigscience/bloom", 
+                #repo_id="sambanovasystems/BLOOMChat-176B-v2", 
+                model_kwargs={"temperature":1e-10
+                ,"max_new_tokens":200, "repetition_penalty":2.0
+		})
     else:
         return OpenAI(temperature=0)
 

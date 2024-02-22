@@ -1,9 +1,5 @@
 version: '3.9'
 
-networks:
-  net:
-    driver: bridge
-
 services:
 
   chromadb:
@@ -11,39 +7,42 @@ services:
         context: ./chromadb
         dockerfile: Dockerfile
       image: ${CHROMADB_IMAGE}
-      container_name: chromadb
       volumes:
         - ./chroma:/chroma/chroma
       environment:
         - IS_PERSISTENT=TRUE
         - ANONYMIZED_TELEMETRY=TRUE 
+        - http_proxy=${http_proxy}
+        - https_proxy=${http_proxy}
+        - no_proxy=${no_proxy}
       ports:
         - 8000:8000
       healthcheck:
         test: curl --fail http://localhost:8000/api/v1/heartbeat || exit 1
-        interval: 20s
-        retries: 5
+        interval: 30s
+        retries: 10
         start_period: 60s
         timeout: 5s
-      networks:
-        - net
 
   ca-chatbot-rag:
       build:
         context: ./rag
         dockerfile: Dockerfile
       image: ${CHATBOT_RAG_IMAGE}
-      container_name: ca-chatbot-rag
       environment:
         - CHROMA_HOST=chromadb
         - INDEX_COLLECTION_NAME=adrs
         - STREAMLIT_SERVER_ENABLE_STATIC_SERVING=true
         - CHROMA_PORT=8000
         - OPENAI_API_KEY=${OPENAI_API_KEY_RAG}
-        - BASE_URL=http://localhost:9090/app/static
+        - BASE_URL=${BASE_URL}
         - HUGGINGFACEHUB_API_TOKEN=${HUGGINGFACEHUB_API_TOKEN_RAG}
         - IS_OPEN_SOURCE=${IS_OPEN_SOURCE}
-        - NUMBER_OF_RESULTS=${NUMBER_OF_RESULTS}
+        - NUMBER_OF_RESULTS=${NUMBER_OF_RESULTS}                
+        - MARKDOWN_IN_HTML=${MARKDOWN_IN_HTML}
+        - http_proxy=${http_proxy}
+        - https_proxy=${http_proxy}
+        - no_proxy=${no_proxy}
       volumes:
         - ./adrs:/app/static/adrs
       ports:  
@@ -51,15 +50,12 @@ services:
       depends_on:
         chromadb:
            condition: service_healthy
-      networks:
-        - net
         
   ca-chatbot-indexing:
       build:
         context: ./indexing
         dockerfile: Dockerfile
       image: ${CHATBOT_INDEXING_IMAGE}
-      container_name: ca-chatbot-indexing
       environment:
         - CHROMA_HOST=chromadb
         - INDEX_COLLECTION_NAME=adrs
@@ -69,13 +65,14 @@ services:
         - HUGGINGFACEHUB_API_TOKEN=${HUGGINGFACEHUB_API_TOKEN_INDEXING}
         - IS_OPEN_SOURCE=${IS_OPEN_SOURCE}
         - FILE_TYPE=${FILE_TYPE}
+        - http_proxy=${http_proxy}
+        - https_proxy=${http_proxy}
+        - no_proxy=${no_proxy}
       volumes:
         - ./adrs:/adrs
       depends_on:
         chromadb:
            condition: service_healthy
-      networks:
-        - net
 
 volumes:
   chroma:

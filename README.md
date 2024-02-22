@@ -93,6 +93,7 @@ STREAMLIT_SERVER_ENABLE_STATIC_SERVING=true
 BASE_URL=http://<base_path>:9090/app/static
 IS_OPEN_SOURCE=true
 FILE_TYPE=md
+MARKDOWN_IN_HTML=true
 ```
 
 Make sure to replace <your_indexing_api_key> and <your_rag_api_key> with your actual API keys.
@@ -100,6 +101,8 @@ Make sure to replace <your_indexing_api_key> and <your_rag_api_key> with your ac
 Make sure to replace <base_path> with your actual base path.
 
 After setting these variables, you can use them in your scripts or configuration files for running Docker containers or other relevant processes.
+
+if MARKDOWN_IN_HTML=true is configured, you must generate htmls files. See below.  
 
 ### Pull Docker images:
 
@@ -114,6 +117,21 @@ These commands pull Docker images from Docker Hub.
 ### Copy ADRs files:
 
 Copy your ADRs (Architectural Decision Records) files to the ./adrs directory.
+
+### Generate html from mardown:
+
+if you want to view formated md files yo must set environment variable:  
+
+```bash
+MARKDOWN_IN_HTML=true
+```
+
+and run the script to convert md to html:  
+
+```bash
+sh ./scripts/generate_md_html.sh
+```
+ignore warnings.  
 
 ###  Run Docker Compose:
 

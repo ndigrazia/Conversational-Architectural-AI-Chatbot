@@ -30,7 +30,7 @@ embeddings = create_embeddings()
 
 index_collection_name = os.getenv("INDEX_COLLECTION_NAME")
 
-number_of_results = os.getenv("NUMBER_OF_RESULTS")
+number_of_results = int(os.getenv("NUMBER_OF_RESULTS"))
 
 vector_connector = ChromaConnector(embeddings, index_collection_name)
 doc_search = vector_connector.get_client()
