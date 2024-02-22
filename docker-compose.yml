@@ -38,7 +38,8 @@ services:
         - BASE_URL=${BASE_URL}
         - HUGGINGFACEHUB_API_TOKEN=${HUGGINGFACEHUB_API_TOKEN_RAG}
         - IS_OPEN_SOURCE=${IS_OPEN_SOURCE}
-        - NUMBER_OF_RESULTS=${NUMBER_OF_RESULTS}                
+        - NUMBER_OF_RESULTS=${NUMBER_OF_RESULTS}  
+        - NUMBER_OF_RESULTS_TO_VIEW=${NUMBER_OF_RESULTS_TO_VIEW}              
         - MARKDOWN_IN_HTML=${MARKDOWN_IN_HTML}
         - http_proxy=${http_proxy}
         - https_proxy=${http_proxy}

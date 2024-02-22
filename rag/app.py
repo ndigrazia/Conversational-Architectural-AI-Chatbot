@@ -31,6 +31,7 @@ embeddings = create_embeddings()
 index_collection_name = os.getenv("INDEX_COLLECTION_NAME")
 
 number_of_results = int(os.getenv("NUMBER_OF_RESULTS"))
+number_of_results_to_view = int(os.getenv("NUMBER_OF_RESULTS_TO_VIEW"))
 
 vector_connector = ChromaConnector(embeddings, index_collection_name)
 doc_search = vector_connector.get_client()
@@ -58,7 +59,8 @@ if prompt := st.chat_input("Go ahead, hit me with your question. What's on your 
     with st.chat_message("user"):
         st.markdown(prompt)
     with st.chat_message("assistant"):
-        response = answer_generator.get_answer(prompt, number_of_results)
+        response = answer_generator.get_answer(prompt, number_of_results, 
+                                                number_of_results_to_view)
         obj = {
             "answer": response.answer,
             "link_reference": response.to_link_references()
