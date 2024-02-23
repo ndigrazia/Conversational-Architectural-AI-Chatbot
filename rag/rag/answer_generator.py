@@ -26,7 +26,7 @@ class AnswerGenerator:
         self._retriever = retriever
    
     def get_answer(self, question: str, 
-                   number_of_results: Optional[int] = NUMBER_OF_RESULTS_DEFAULT
+                   number_of_results: Optional[int] = NUMBER_OF_RESULTS_DEFAULT,
                    number_of_results_to_view: Optional[int] = NUMBER_OF_RESULTS_TO_VIEW_DEFAULT
                    ) -> QAResponse:
         similar_docs = self._retriever.get_similar_documents(question, number_of_results_to_view)
