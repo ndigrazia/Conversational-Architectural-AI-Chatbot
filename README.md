@@ -50,7 +50,9 @@ mkdir ./adrs
 mkdir ./chroma
 ```
 
-These commands create two directories named adrs and chroma.
+These commands create two directories named adrs and chroma. 
+
+See more [ADR files](https://github.com/ndigrazia/ArchitectureDecisions) to figure out documents that may be used as sources in "adrs" folder.
 
 ### Set environment variables in a .env file:
 
