@@ -6,6 +6,10 @@ echo "Cambiando referencias a .md.html"
 # - Con este sed, se cambian todos lo links a ".md.html" ej: "(./nombre-archivo.md.html)"
 find . -name "*.md" -exec sed -i 's/.md/.md.html/g' {} \;
 
+# - Para que sea reentrante. Ver de optimizar..
+find . -name "*.md" -exec sed -i 's/.html.html/.html/g' {} \;
+
+
 echo "agregando . a links relativos"
 # - Con este sed, se agrega el "./" inicial a la referencia de archivo ej: "(./nombre-archivo.md.pdf)"
 # cuando la misma no existe
