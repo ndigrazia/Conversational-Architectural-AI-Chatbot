@@ -95,7 +95,7 @@ STREAMLIT_SERVER_ENABLE_STATIC_SERVING=true
 BASE_URL=http://<base_path>:9090/app/static
 IS_OPEN_SOURCE=true
 FILE_TYPE=md
-MARKDOWN_IN_HTML=true
+MARKDOWN_IN_FORMAT=.pdf
 ```
 
 Make sure to replace <your_indexing_api_key> and <your_rag_api_key> with your actual API keys.
@@ -125,7 +125,7 @@ Copy your ADRs (Architectural Decision Records) files to the ./adrs directory.
 if you want to view formated md files yo must set environment variable:  
 
 ```bash
-MARKDOWN_IN_HTML=true
+MARKDOWN_IN_FORMAT=.html
 ```
 
 and run the script to convert md to html:  
