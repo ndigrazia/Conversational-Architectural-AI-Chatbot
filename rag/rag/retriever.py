@@ -1,5 +1,5 @@
 from langchain_core.documents.base import Document
-from langchain_core.vectorstores import VectorStore
+from langchain_core.vectorstores import VectorStore, VectorStoreRetriever
 from typing import List
 
 class Retriever:
@@ -15,3 +15,6 @@ class Retriever:
                             ) -> List[Document]:    
         similar_docs = self._vector_store.similarity_search(query, k=number_of_results)
         return similar_docs
+    
+    def get_vector_store_retriever(self) -> VectorStoreRetriever:
+        return self._vector_store.as_retriever()

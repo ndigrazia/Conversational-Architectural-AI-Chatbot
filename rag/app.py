@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from rag.answer_generator import AnswerGenerator
+from rag.chat_answer_generator import ChatAnswerGenerator
 from rag.retriever import Retriever
 import streamlit as st
 import streamlit_authenticator as stauth
@@ -53,7 +54,19 @@ doc_search = vector_connector.get_client()
 
 retriever = Retriever(doc_search)
 
-answer_generator = AnswerGenerator(retriever)
+answer_generator = ChatAnswerGenerator(retriever)
+
+def get_session_id():
+    from streamlit.runtime import get_instance
+    from streamlit.runtime.scriptrunner import get_script_run_ctx
+    runtime = get_instance()
+    session_id = get_script_run_ctx().session_id
+    session_info = runtime._session_mgr.get_session_info(session_id)
+    if session_info is None:
+        raise RuntimeError("Couldn't get your Streamlit Session object.")
+    return session_info.session.id
+
+session_id = get_session_id()
 
 if not st.session_state["authentication_status"]:
     authenticator.login(fields={'Form name':'Iniciar sesión', 'Username':'Usuario', 
@@ -77,17 +90,19 @@ def chat_view():
                     obj = message["content"]
                     show_resume(obj)
 
-        if prompt := st.chat_input("Go ahead, hit me with your question. What's on your mind?"):
+        if prompt := st.chat_input("¿Cuál es tu pregunta?"):
             st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("user"):
                 st.markdown(prompt)
             with st.chat_message("assistant"):
-                response = answer_generator.get_answer(prompt, number_of_results, 
-                                                        number_of_results_to_view)
+                message_placeholder = st.empty()
+                message_placeholder.markdown("...")
+                response = answer_generator.get_answer(prompt, session_id)
                 obj = {
                     "answer": response.answer,
                     "link_reference": response.to_link_references()
                 }
+                message_placeholder.empty()
                 show_resume(obj)
             st.session_state.messages.append({"role": "assistant", "content": obj})
 
