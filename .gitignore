@@ -1,3 +1,5 @@
 adrs/
 chroma/
 .env
+.venv
+__pycache__/

@@ -1,0 +1,14 @@
+credentials:
+  usernames:
+    miguel.medrano@telefonica.com:
+      email: miguel.medrano@telefonica.com
+      failed_login_attempts: 0 # Will be managed automatically
+      logged_in: False # Will be managed automatically
+      name: Miguel Medrano
+      password: miguelmedrano # Will be hashed automatically
+cookie:
+  expiry_days: 1
+  key: some_signature_key # Must be string
+  name: some_cookie_name
+pre-authorized:
+  emails:

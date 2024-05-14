@@ -3,11 +3,26 @@ from dotenv import load_dotenv
 from rag.answer_generator import AnswerGenerator
 from rag.retriever import Retriever
 import streamlit as st
+import streamlit_authenticator as stauth
 from support.responses.qa_response import QAResponse
 from support.vectorstore_connectors.chroma import ChromaConnector
 from utils.ai import create_embeddings
 #from langchain_openai import OpenAIEmbeddings
 #from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
+
+import yaml
+from yaml.loader import SafeLoader
+
+with open('rag/auth.yaml') as file:
+    config = yaml.load(file, Loader=SafeLoader)
+
+authenticator = stauth.Authenticate(
+    config['credentials'],
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days'],
+    config['pre-authorized']
+)
 
 load_dotenv()
 
@@ -40,31 +55,45 @@ retriever = Retriever(doc_search)
 
 answer_generator = AnswerGenerator(retriever)
 
-st.title('🤖 Conversational Architectural AI Chatbot')
+if not st.session_state["authentication_status"]:
+    authenticator.login(fields={'Form name':'Iniciar sesión', 'Username':'Usuario', 
+                            'Password':'Contraseña', 'Login':'Login'})
 
-if 'messages' not in st.session_state:
-    st.session_state['messages'] = []
+def chat_view():
+    authenticator.logout(button_name='Cerrar sesión', location='sidebar')
+    if st.session_state["authentication_status"] is not None:
+        st.write(f'Bienvenido *{st.session_state["name"]}*')
+        st.title('🤖 Conversational Architectural AI Chatbot')
 
-for message in st.session_state.messages:
-    if message["role"] == "user":
-        with st.chat_message(message["role"]):
-             st.markdown(message["content"])
-    if message["role"] == "assistant":
-        with st.chat_message(message["role"]):
-             obj = message["content"]
-             show_resume(obj)
+        if 'messages' not in st.session_state:
+            st.session_state['messages'] = []
 
-if prompt := st.chat_input("Go ahead, hit me with your question. What's on your mind?"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
-    with st.chat_message("assistant"):
-        response = answer_generator.get_answer(prompt, number_of_results, 
-                                                number_of_results_to_view)
-        obj = {
-            "answer": response.answer,
-            "link_reference": response.to_link_references()
-        }
-        show_resume(obj)
-    st.session_state.messages.append({"role": "assistant", "content": obj})
+        for message in st.session_state.messages:
+            if message["role"] == "user":
+                with st.chat_message(message["role"]):
+                    st.markdown(message["content"])
+            if message["role"] == "assistant":
+                with st.chat_message(message["role"]):
+                    obj = message["content"]
+                    show_resume(obj)
 
+        if prompt := st.chat_input("Go ahead, hit me with your question. What's on your mind?"):
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
+            with st.chat_message("assistant"):
+                response = answer_generator.get_answer(prompt, number_of_results, 
+                                                        number_of_results_to_view)
+                obj = {
+                    "answer": response.answer,
+                    "link_reference": response.to_link_references()
+                }
+                show_resume(obj)
+            st.session_state.messages.append({"role": "assistant", "content": obj})
+
+if st.session_state["authentication_status"]:
+    chat_view()
+elif st.session_state["authentication_status"] is False:
+    st.error('Usuario/contraseña incorrecto.')
+elif st.session_state["authentication_status"] is None:
+    st.warning('Por favor, ingrese su usuario y contraseña.')
