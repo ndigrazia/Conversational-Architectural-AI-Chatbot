@@ -47,9 +47,11 @@ class QAResponse(Response):
             match = re.search(r'([^/]+)\.(md|pdf)$', reference)
             if match:
                 extracted_string = match.group(1)
-                file_type = match.group(2)
+                file_type = match.group(2)    
             if file_type in ["md","MD"]:
                 file_type_to_add = self.MARKDOWN_IN_FORMAT
+            else:
+                file_type_to_add = ""
             reference = reference.replace("..", "")
             link = "[" + extracted_string + "](" + self.BASE_URL + reference + file_type_to_add + ")"
             link_references.append(link)
