@@ -17,8 +17,7 @@ COPY ./requirements.txt requirements.txt
 
 RUN pip install --no-cache-dir --upgrade --prefix="/install" -r requirements.txt
 
-FROM builder AS final
-
+FROM python:3.12-slim-bookworm AS final
 
 # RUN useradd -m papus
 
