@@ -14,7 +14,7 @@ from utils.ai import create_embeddings
 import yaml
 from yaml.loader import SafeLoader
 
-with open('rag/auth.yaml') as file:
+with open(os.getenv("AUTH_FILENAME")) as file:
     config = yaml.load(file, Loader=SafeLoader)
 
 authenticator = stauth.Authenticate(
