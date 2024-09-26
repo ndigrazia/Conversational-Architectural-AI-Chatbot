@@ -2,6 +2,7 @@ from core.responses import Response
 from dotenv import load_dotenv
 from langchain_core.documents.base import Document
 from typing import List
+from pathlib import Path
 import re
 import os
 
@@ -53,6 +54,11 @@ class QAResponse(Response):
             else:
                 file_type_to_add = ""
             reference = reference.replace("..", "")
+
+            # remove local base path from link.
+            path = Path(reference)
+            reference = str(path.relative_to(os.getenv("ADRS_PATH")))
+
             link = "[" + extracted_string + "](" + self.BASE_URL + reference + file_type_to_add + ")"
             link_references.append(link)
         return link_references
