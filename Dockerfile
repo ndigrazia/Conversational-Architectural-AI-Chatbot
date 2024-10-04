@@ -1,8 +1,5 @@
 FROM python:3.12-bookworm AS builder
 
-ENV http_proxy="http://10.204.164.38:10003"
-ENV https_proxy="http://10.204.164.38:10003"
-
 RUN apt-get update --fix-missing && apt-get install -y --fix-missing \
     git \
     build-essential \
