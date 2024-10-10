@@ -1,18 +1,20 @@
 import os
 from dotenv import load_dotenv
-from rag.answer_generator import AnswerGenerator
-from rag.chat_answer_generator import ChatAnswerGenerator
-from rag.retriever import Retriever
 import streamlit as st
 import streamlit_authenticator as stauth
-from support.responses.qa_response import QAResponse
-from support.vectorstore_connectors.chroma import ChromaConnector
-from utils.ai import create_embeddings
-#from langchain_openai import OpenAIEmbeddings
-#from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
 
+import httpx
+import asyncio
+import requests
+import json
+
+from typing import List
 import yaml
 from yaml.loader import SafeLoader
+
+class Struct:
+    def __init__(self, **entries):
+        self.__dict__.update(entries)
 
 with open(os.getenv("AUTH_FILENAME")) as file:
     config = yaml.load(file, Loader=SafeLoader)
@@ -34,27 +36,14 @@ for key, value in os.environ.items():
 
 print("----------------ENV---------------------")
 
+
 def show_resume(obj):
     st.markdown(obj["answer"])
     st.markdown("References:")
     for link in obj["link_reference"]:
         st.markdown(link, unsafe_allow_html=True)
 
-#embeddings = OpenAIEmbeddings()
-#embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
-embeddings = create_embeddings()
-
-index_collection_name = os.getenv("INDEX_COLLECTION_NAME")
-
-number_of_results = int(os.getenv("NUMBER_OF_RESULTS"))
-number_of_results_to_view = int(os.getenv("NUMBER_OF_RESULTS_TO_VIEW"))
-
-vector_connector = ChromaConnector(embeddings, index_collection_name)
-doc_search = vector_connector.get_client()
-
-retriever = Retriever(doc_search)
-
-answer_generator = ChatAnswerGenerator(retriever)
+rag_api_endpoint = os.getenv("RAG_API_ENDPOINT")
 
 def get_session_id():
     from streamlit.runtime import get_instance
@@ -71,11 +60,34 @@ session_id = get_session_id()
 if not st.session_state["authentication_status"]:
     authenticator.login(fields={'Form name':'Iniciar sesión', 'Username':'Usuario', 
                             'Password':'Contraseña', 'Login':'Login'})
+        
+class Response():
+    answer: str
+    link_references: List[str] = []
+
+def get_answer(question: str, session_id: str, user: str) -> Response:
+
+    request={
+        "question": question,
+        "session_id": session_id
+    }
+    print("user: " + user)
+    print("request: ")
+    print(request)
+    response_obj = requests.post(rag_api_endpoint, json=request)
+    print("response status: ")
+    print(response_obj.status_code)
+    response = response_obj.json()
+    print("response: ")
+    print(response)
+    return Struct(**response)
+
 
 def chat_view():
     authenticator.logout(button_name='Cerrar sesión', location='sidebar')
     if st.session_state["authentication_status"] is not None:
-        st.write(f'Bienvenido *{st.session_state["name"]}*')
+        user=st.session_state["name"]
+        st.write(f'Bienvenido *{user}*')
         st.title('🤖 Conversational Architectural AI Chatbot')
 
         if 'messages' not in st.session_state:
@@ -97,10 +109,10 @@ def chat_view():
             with st.chat_message("assistant"):
                 message_placeholder = st.empty()
                 message_placeholder.markdown("...")
-                response = answer_generator.get_answer(prompt, session_id)
+                response = get_answer(prompt, session_id, user)
                 obj = {
                     "answer": response.answer,
-                    "link_reference": response.to_link_references()
+                    "link_reference": response.link_references
                 }
                 message_placeholder.empty()
                 show_resume(obj)
@@ -112,3 +124,5 @@ elif st.session_state["authentication_status"] is False:
     st.error('Usuario/contraseña incorrecto.')
 elif st.session_state["authentication_status"] is None:
     st.warning('Por favor, ingrese su usuario y contraseña.')
+
+

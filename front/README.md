@@ -2,10 +2,11 @@
 
 ## Description 
 
-A Rag service API responds to client questions utilizing LLM's function-calling.
+A Rag service responds to customer questions utilizing LLM's function-calling.
 
 * Database: Chroma (https://docs.trychroma.com/).
 * LLM: OpenAI (https://openai.com/).
+* Frontend: Streamlit (https://streamlit.io/).
   
 ## Runtime 
 
@@ -27,9 +28,7 @@ A Rag service API responds to client questions utilizing LLM's function-calling.
 * chromadb-client==0.4.23.dev0
 * fastapi==0.109.0
 * python-dotenv==1.0.0
-## API definition/test
-
-http://localhost:8000/docs
+* streamlit==1.30.0
 
 ## Make a Indexing container 
 

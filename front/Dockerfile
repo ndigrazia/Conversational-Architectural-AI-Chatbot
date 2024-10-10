@@ -35,6 +35,6 @@ COPY . /app
 
 EXPOSE 9090
 
-#HEALTHCHECK CMD curl --fail http://localhost:9090/_stcore/health
+HEALTHCHECK CMD curl --fail http://localhost:9090/_stcore/health
 
-ENTRYPOINT ["fastapi","run","main.py","--host","0.0.0.0"]
+ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=9090", "--server.address=0.0.0.0"]

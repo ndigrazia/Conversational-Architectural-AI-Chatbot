@@ -1,6 +1,7 @@
 FROM python:3.12-bookworm AS builder
 
 RUN apt-get update --fix-missing && apt-get install -y --fix-missing \
+    podman \
     git \
     build-essential \
     gcc \

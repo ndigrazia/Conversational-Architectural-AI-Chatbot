@@ -35,9 +35,13 @@ See more [Readme file](./indexing/README.md).
 
 ## Rag Service
 
-Our Rag service is like your go-to problem solver when you have questions. It's all powered by LLM's function-calling magic, making sure you get the answers you need in a snap.
+Our Rag service esposes an API that can you invoke to resolve questions. It's all powered by LLM's function-calling magic, making sure you get the answers you need in a snap.
 
 See more [Readme file](./rag/README.md).
+
+## Front Service
+
+Is the front-end of the chatbot. You can ask questions in intereactive way, internally this call rag API.
 
 ## Start all services from docker.io
 

@@ -32,7 +32,6 @@ services:
       environment:
         - CHROMA_HOST=chromadb
         - INDEX_COLLECTION_NAME=adrs
-        - STREAMLIT_SERVER_ENABLE_STATIC_SERVING=true
         - CHROMA_PORT=8000
         - OPENAI_API_KEY=${OPENAI_API_KEY_RAG}
         - BASE_URL=${BASE_URL}
@@ -47,11 +46,28 @@ services:
       volumes:
         - ./adrs:/app/static/adrs
       ports:  
-        - 9090:9090
+        - 8000:8000
       depends_on:
         chromadb:
            condition: service_healthy
-        
+
+  ca-chatbot-front:
+      build:
+        context: ./front
+        dockerfile: Dockerfile
+      image: ${CHATBOT_FRONT_IMAGE}
+      environment:
+        - RAG_API_ENDPOINT=http://ca-chatbot-rag:8000/rag/
+        - STREAMLIT_SERVER_ENABLE_STATIC_SERVING=true
+        - http_proxy=${http_proxy}
+        - https_proxy=${http_proxy}
+        - no_proxy=${no_proxy}
+      ports:  
+        - 9090:9090
+      depends_on:
+        ca-chatbot-rag:
+           condition: service_healthy
+
   ca-chatbot-indexing:
       build:
         context: ./indexing
