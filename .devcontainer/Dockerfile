@@ -1,6 +1,18 @@
-FROM python:3.12-bookworm AS builder
+#FROM python:3.12-bookworm AS builder
+FROM ubuntu:24.04
+
+#RUN apt install python3.12 -y
 
 RUN apt-get update --fix-missing && apt-get install -y --fix-missing \
+    python3.12 \
+    python3-pip \
+#    python3-dev \
+#    python3-venv \
+#    libssl-dev \
+#    libffi-dev \
+    pipx \
+    nodejs \
+    npm \
     podman \
     git \
     build-essential \
@@ -16,7 +28,6 @@ WORKDIR /install
 
 COPY ./rag/requirements.txt requirements.txt
 
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
-# --prefix="/install"
+# CORREGIR!! Saco para probat front end, pero es necesario. Da error.
+#RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-# streamlit run app.py --server.port=9090 --server.address=0.0.0.0
