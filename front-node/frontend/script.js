@@ -14,7 +14,8 @@ function displayUserMessage(message) {
     chatBody.scrollTop = chatBody.scrollHeight;
 }
 
-function displayChatbotMessage(message) {
+function displayChatbotMessage(answer, links) {
+
     if (isChatbotTyping) {
         // Remove the typing indicator when bot responds
         clearInterval(typingIntervalId);
@@ -27,7 +28,29 @@ function displayChatbotMessage(message) {
 
     const chatbotMessage = document.createElement('div');
     chatbotMessage.className = 'chatbot-message';
-    chatbotMessage.innerText = message;
+    chatbotMessage.innerText = answer;
+
+    if (links && links.length > 0)
+    {
+        const title = document.createElement("div");
+        title.innerHTML = "<br>References:<br>";
+
+        const link_list = document.createElement('ul');
+        links.forEach((item) => {
+            let li = document.createElement("li");
+            let a = document.createElement("a");
+            let txt = item.match(/\[(.*?)\]/)[1];//get only the txt
+            let url = item.match(/\((.*?)\)/)[1];//get only the link
+            a.innerText = txt;
+            a.href = url;
+            li.appendChild(a);
+            link_list.appendChild(li);
+        });
+        chatbotMessage.appendChild(title);
+        chatbotMessage.appendChild(link_list);
+    
+    }
+
     chatBody.appendChild(chatbotMessage);
     chatBody.scrollTop = chatBody.scrollHeight;
 }
@@ -73,7 +96,9 @@ async function sendMessage() {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: message }),
+        body: JSON.stringify({ question: message ,
+                                session_id: "1233"
+                            }),
         });
 
         if (!response.ok) {
@@ -82,8 +107,9 @@ async function sendMessage() {
         }
 
         const data = await response.json();
-        const chatbotResponse = data.message;
-        displayChatbotMessage(chatbotResponse);
+        const answer = data.answer;
+        const links = data.link_references;
+        displayChatbotMessage(answer,links);
     } catch (error) {
         console.error('Error:', error);
     }
