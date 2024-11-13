@@ -11,8 +11,7 @@ RUN apt-get update --fix-missing && apt-get install -y --fix-missing \
 #    libssl-dev \
 #    libffi-dev \
     pipx \
-    nodejs \
-    npm \
+    curl \
     podman \
     git \
     build-essential \
@@ -27,6 +26,9 @@ RUN apt-get update --fix-missing && apt-get install -y --fix-missing \
 WORKDIR /install
 
 COPY ./rag/requirements.txt requirements.txt
+
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+RUN nvm install 21
 
 # CORREGIR!! Saco para probat front end, pero es necesario. Da error.
 #RUN pip install --no-cache-dir --upgrade -r requirements.txt

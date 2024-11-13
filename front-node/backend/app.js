@@ -10,8 +10,10 @@ const PORT = 3000;
 app.use(bodyParser.json());
 app.use(cors());
 
-const routes = require("./routes");
-app.use(routes);
+const api = require("./routes/api");
+app.use(api);
+const auth = require("./routes/auth");
+app.use(auth);
 
 app.use(express.static(path.join(__dirname, "..", "frontend")));
 

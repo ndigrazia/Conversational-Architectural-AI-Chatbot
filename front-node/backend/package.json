@@ -1,10 +1,16 @@
 {
   "dependencies": {
     "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
     "openai": "^3.3.0",
+    "openid-client": "^6.1.3",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
     "request-promise": "^4.2.6"
   },
   "scripts": {
@@ -16,5 +22,9 @@
   "description": "Chat Bot Using OpenAI's API backend express server",
   "main": "app.js",
   "author": "Tyler O'Neil",
-  "license": "MIT"
-}
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }}
