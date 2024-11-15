@@ -4,15 +4,33 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        {
+            "name": "Launch Program JS",
+            "program": "${workspaceFolder}/front-ts/example.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
 
 
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program TS",
-            "program": "${workspaceFolder}/front-ts/passport.ts",
+            "name": "Launch TS",
+            "program": "${workspaceFolder}/front-ts/src/app.ts",
             "preLaunchTask": "tsc: build - front-ts/tsconfig.json",
-            "outFiles": ["${workspaceFolder}/front-ts/out/**/*.js"]
+            "outFiles": ["${workspaceFolder}/front-ts/dist/**/*.js"]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch TS example",
+            "program": "${workspaceFolder}/front-ts/passport-example.ts",
+            "preLaunchTask": "tsc: build - front-ts/tsconfig.json",
+            "outFiles": ["${workspaceFolder}/front-ts/dist/**/*.js"]
         }
+
     ]
 }
