@@ -1,17 +1,15 @@
 import request from "request-promise";
 //import request from "request";
-import dotenv from "dotenv";
+import dotenv from "dotenv-flow";
 
 dotenv.config();
 async function callRag(question: string, session_id: string): Promise<any> {
   try {
     console.log("invocando api rag...");
-    console.log(process.cwd());
+    console.log("session_id: " + session_id);
 
     const endpoint: string = process.env.RAG_API_ENDPOINT || "una_url";
     const timeout: number = parseInt(process.env.RAG_API_TIMEOUT || "10000", 10);
-
-    console.log(endpoint);
 
     const options = {
       headers: { 'content-type': 'application/json' },
@@ -25,7 +23,6 @@ async function callRag(question: string, session_id: string): Promise<any> {
 
     const result = await request.post(options);
 
-    console.log(1);
     console.log("resultado de invocación");
     console.log(result);
     return result;

@@ -8,18 +8,25 @@ import passport from 'passport'
 import { ensureLoggedIn, ensureLoggedOut } from 'connect-ensure-login'
 import http from "http";
 import path from 'path';
+import { ensureError } from './utils/errorUtils.js';
 
+import dotenvFlow  from 'dotenv-flow';
+
+dotenvFlow.config();
+
+
+console.log("config: " + process.env.JWT_VERIF_AUDIENCE)
 let app = express();
 
 
 // Prerequisites oidc
 
-
-let server = new URL("http://10.249.16.123:8080/realms/realm2/.well-known/openid-configuration"); // Authorization server's Issuer Identifier URL
-let clientId = "appr2"; // Client identifier at the Authorization Server
-let clientSecret = "NYlFGl1kKhxyYEgAaAvMWkp5P3a6LlCi"; // Client Secret
-let scope = 'openid';
-let sessionSecret = "secret"; // Secret to sign session cookies with
+let server = new URL(process.env.AUTH_SERVER_WELL_KNOW_URL ?? "AUTH_SERVER_WELL_KNOW_URL undefined" ); // Authorization server's Issuer Identifier URL
+let clientId = process.env.APP_CLIENT_ID ?? "CLIENT_ID undefined"; // Client identifier at the Authorization Server
+let clientSecret = process.env.APP_CLIENT_SECRET ?? "CLIENT_SECRET undefined"; // Client Secret
+let scope = process.env.APP_SCOPE;
+let callbackURL = process.env.APP_CALLBACK_URL;
+let sessionSecret = process.env.SESSION_SECRET ?? "SESSION_SECRET undefined"; // Secret to sign session cookies with
 
 // End of prerequisites
 
@@ -31,9 +38,15 @@ declare global {
     }
   }
 }
+var config : client.Configuration
+try {
+  var config : client.Configuration = await client.discovery(server, clientId, clientSecret)
+} catch (err) {
+  const error = ensureError(err)
 
-
-let config : client.Configuration = await client.discovery(server, clientId, clientSecret)
+  console.log(error);
+  process.exit(1);
+}
 
 console.log("Soporta PKCE");
 console.log(config.serverMetadata().supportsPKCE());
@@ -45,20 +58,35 @@ app.use(
     saveUninitialized: false,
     resave: true,
     secret: sessionSecret,
+    cookie: {
+      maxAge: 1000 * 60 * 60, // 1 hour
+      httpOnly: true,   // eliminar si usa token almacenado en cookie para invocar apis
+      //secure: true,   // agregar en prod 
+      sameSite: 'lax' 
+    }
   }),
 )
 app.use(passport.authenticate('session'))
 
 let verify: VerifyFunctionWithRequest = (req,tokens, verified) => {
-  //console.log("tokens: " + JSON.stringify(tokens));
 
-  req.res?.cookie('token', tokens.access_token);
-  verified(null, tokens.claims())
+  checkJWT(tokens.access_token, (err: any, user: any) => {
+
+  if (err) {
+    console.log("JWT inválido en login." + err);
+    return verified(new Error("Login error."));
+  }
+  console.log("jwt valido en login " + JSON.stringify(user));
+
+  // habilitar solo si se envia token por cookie, seteando adicionalmente los valores de seguridad para cookie.
+  //req.res?.cookie('token', tokens.access_token);
+  return verified(null, tokens.claims())
+
+});
 }
 
-
 passport.use('oidc',new Strategy({ config, scope , passReqToCallback: true,
-                                  callbackURL: 'http://localhost:8888/login/callback',
+                                  callbackURL: callbackURL,
                                   }, verify))
 
 passport.serializeUser((user: Express.User, cb) => {
@@ -73,7 +101,7 @@ let token = ""
 ;
 
 // Rutas de aplicación
-let frontStaticDir = path.join(path.dirname(import.meta.filename),'..','..', 'front-static')
+let frontStaticDir = path.join(path.dirname(import.meta.filename),'..', 'front-static')
 
 app.get('/',ensureLoggedIn('/login'), (req: any, res: any) => {
   res.redirect('/index.html');
@@ -87,6 +115,7 @@ app.use(express.static(frontStaticDir));
 
 
 import api from './routes/bff-api.js';
+import { checkJWT } from './utils/jwtUtils.js'
 app.use(express.json());
 app.use('/api',api);
 
@@ -96,8 +125,7 @@ app.use('/api',api);
 app.get(
   '/login',
   ensureLoggedOut('/logout'),
-  //passport.authenticate(server.hostname),
-  passport.authenticate('oidc',{scope:"openid",state:"12345"})
+  passport.authenticate('oidc',{scope:"openid"})//,state:"12345"})
 )
 
 app.get('/logout', (req, res) => {
@@ -115,12 +143,7 @@ app.get('/logout', (req, res) => {
   
       console.log('-----------------------------');
       console.log('estoy en /login/callback');
-      console.log("session: " + req.session);
       console.log("session.id: " + req.session.id);
-      console.log("originalUrl: " + req.originalUrl);
-      console.log("user.username: " + JSON.stringify(req.user) );
-
-  
   
       let result = passport.authenticate('oidc',{ 
            successRedirect: '/index.html',
@@ -131,16 +154,6 @@ app.get('/logout', (req, res) => {
     
   )
   
-
-  app.get("/error",(req,res) =>{
-    console.log('-----------------------------');
-    console.log('estoy en /error');
-  
-    console.log("tokenset:");
-    //console.log(req.session.tokenSet);
-  
-    res.send(" <a href='/login'>Error, reintentar</a>")
-  })
   app.get("/apilogin",(req,res) =>{
     console.log('-----------------------------');
     console.log('estoy en /apilogin');
@@ -148,34 +161,11 @@ app.get('/logout', (req, res) => {
     res.status(403);
     res.send({"logged":"false"})
   })
-  app.get ("/user",(req,res) =>{
   
-      console.log('-----------------------------');
-      console.log('estoy en /user');
-  
-      console.log("req.session:");
-      console.log(req.session);
-      //console.log(req.session.tokenSet);
-  
-      res.header("Content-Type",'application/json');
-  
-  
-      let curl = "curl --request POST 'http://10.249.16.123:8080/realms/realm2/tef-jwt-bearer' \
-       --header 'Content-Type: application/x-www-form-urlencoded' \
-       --data-urlencode 'assertion="+token+"'"
-  
-  
-       res.writeHead(200, { 'Content-Type':'text/html'});
-       res.end("<div><a href='/login'> regenerar </a><p>"+curl+"<p></div>");
-       //res.send("<a href='/login'> regenerar </a><div>" + curl + "</div>")
-  
-  })
-
 
 
 
 const httpServer = http.createServer(app)
-    //const server= https.createServer(options,app).listen(3003);
     httpServer.listen(8888,() =>{
         console.log(`Http Server Running on port 8888`)
   })

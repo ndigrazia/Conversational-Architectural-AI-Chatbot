@@ -1,7 +1,7 @@
 import * as express from 'express';
 import { handleMessage } from '../controllers/messageController.js';
 import { ensureLoggedIn } from 'connect-ensure-login'
-import { authenticateJWT } from '../services/jwtUtils.js'
+import { authenticateJWT } from '../utils/jwtUtils.js'
 import { rateLimit } from "express-rate-limit";
 
 // rate limiter
@@ -20,9 +20,9 @@ const router: express.Router = express.Router();
 
 //router.all('*',ensureLoggedIn('/apilogin'));
 
-//router.post('/message',ensureLoggedIn('/apilogin'),limiter, handleMessage);
+router.post('/message',ensureLoggedIn('/apilogin'),limiter, handleMessage);
 
-router.post('/message', authenticateJWT, limiter,  handleMessage);
+//router.post('/message', authenticateJWT, limiter,  handleMessage);
 
 /*
 

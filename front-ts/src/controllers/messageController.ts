@@ -20,6 +20,7 @@ async function handleMessage(req : any, res : any, next : any) {
   } else {
     var session_id: string = req.session.passport.user.email +":"+ req.session.passport.user.preferred_username +":"+ req.session.id
   }
+  
   if ( !session_id || session_id.trim() === "") {
     return res.status(400).json({ error: "No authorization" });
   }

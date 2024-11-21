@@ -1,6 +1,7 @@
 adrs/
 chroma/
 .env
+.env*.local
 .venv
 node_modules
 dist/
