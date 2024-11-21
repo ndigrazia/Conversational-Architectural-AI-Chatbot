@@ -10,11 +10,11 @@ COPY package*.json ./
 # Instalamos las dependencias
 RUN npm install
 
-# Compilo typescript
-RUN npm run build
-
 # Copiamos el código de la aplicación
 COPY . .
+
+# Compilo typescript
+RUN npm run build
 
 # Exponemos el puerto 3000
 EXPOSE 3000

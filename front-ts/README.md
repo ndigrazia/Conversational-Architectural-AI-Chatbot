@@ -12,3 +12,7 @@ This project was used as a base.
 To support login with the global AD, passport was used with the openid-client plugin. Cookies were used between the frontend running in the browser and the BFF using the express-session library. This library only stores a session ID in the cookie and the data in memory. In case of needing to scale to a large number of users, it is necessary to add and configure a session database.
 
 In case of needing to use tokens to invoke the APIGW from the frontend, small changes are needed that are commented out. Modify the client to send the token in the Authorization header, add the cookie with the token in the backend.
+
+## Build image
+
+docker build . -t bdesaacr01.azurecr.io/archi-chatbot/ca-chatbot-rag:0.1
