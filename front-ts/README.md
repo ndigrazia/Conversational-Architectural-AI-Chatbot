@@ -13,6 +13,18 @@ To support login with the global AD, passport was used with the openid-client pl
 
 In case of needing to use tokens to invoke the APIGW from the frontend, small changes are needed that are commented out. Modify the client to send the token in the Authorization header, add the cookie with the token in the backend.
 
+Considerations:
+
+for support for plain HTTP (no tls) change this library:
+```Dockerfile
+RUN grep "(enforceHttps" ./node_modules/oauth4webapi/build/index.js
+RUN sed -i 's/(enforceHttps/(false/g' ./node_modules/oauth4webapi/build/index.js
+
+```
+Only callbacks urls without ports, example "http://pepe.com/login/callback" because passport and dependencies makes internally url without ports numbers to verify Auth Server token response.
+
+
+
 ## Build image
 
 docker build . -t bdesaacr01.azurecr.io/archi-chatbot/ca-chatbot-rag:0.1

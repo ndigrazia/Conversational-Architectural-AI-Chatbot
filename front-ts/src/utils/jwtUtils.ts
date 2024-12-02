@@ -2,13 +2,16 @@
 import jwt from 'jsonwebtoken';
 
 import  jwksClient from 'jwks-rsa';
+
+console.log("jwtUtils, AUTH_SERVER_JWKS_URL: " + process.env.AUTH_SERVER_JWKS_URL);
+
 var client = jwksClient({
   jwksUri: process.env.AUTH_SERVER_JWKS_URL ?? "JWKS_URI undefined",
 
 });
 function getKey(header: any, callback: any){
   client.getSigningKey(header.kid, function(err, key: any) {
-    if (err) { return console.log(err); }
+    if (err) { return callback(err); }
     var signingKey = key?.publicKey || key?.rsaPublicKey;
     callback(null, signingKey);
   });
@@ -20,6 +23,8 @@ let options = {
 }
 
 export function checkJWT(token: string, cb: any) {
+
+  console.log("token to check: " + token);
 
   jwt.verify(token, getKey, options,(err: any, user: any) => {
     if (err) {

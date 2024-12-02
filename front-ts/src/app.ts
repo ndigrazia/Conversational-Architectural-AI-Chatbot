@@ -1,3 +1,13 @@
+
+import dotenvFlow  from 'dotenv-flow';
+
+console.log("env: " + process.env.DOTENV_FLOW_PATH);
+
+if ( typeof process.env.DOTENV_FLOW_PATH !== 'undefined')
+  dotenvFlow.config({path: process.env.DOTENV_FLOW_PATH});
+else
+  dotenvFlow.config();
+
 import * as client from 'openid-client'
 import { Strategy, type VerifyFunctionWithRequest } from 'openid-client/passport'
 
@@ -10,12 +20,9 @@ import http from "http";
 import path from 'path';
 import { ensureError } from './utils/errorUtils.js';
 
-import dotenvFlow  from 'dotenv-flow';
 
-dotenvFlow.config();
+//console.log("dotEnvFlowfiles: " + JSON.stringify(dotenvFlow.listFiles(), null, 2));
 
-
-console.log("config: " + process.env.JWT_VERIF_AUDIENCE)
 let app = express();
 
 
@@ -30,6 +37,8 @@ let sessionSecret = process.env.SESSION_SECRET ?? "SESSION_SECRET undefined"; //
 
 // End of prerequisites
 
+console.log("auth server: " + server);
+
 declare global {
   namespace Express {
     interface User {
@@ -38,9 +47,11 @@ declare global {
     }
   }
 }
-var config : client.Configuration
+var config : client.Configuration;
+
 try {
-  var config : client.Configuration = await client.discovery(server, clientId, clientSecret)
+  
+  var config : client.Configuration = await client.discovery(server, clientId, clientSecret )
 } catch (err) {
   const error = ensureError(err)
 
@@ -97,16 +108,18 @@ passport.deserializeUser((user: Express.User, cb) => {
   return cb(null, user)
 })
 
-let token = ""
-;
+
+var baseUrl = process.env.APP_BASE_URL ?? "APP_BASE_URL undefined"
 
 // Rutas de aplicación
 let frontStaticDir = path.join(path.dirname(import.meta.filename),'..', 'front-static')
 
-app.get('/',ensureLoggedIn('/login'), (req: any, res: any) => {
-  res.redirect('/index.html');
+app.get('/',ensureLoggedIn(baseUrl + '/login'), (req: any, res: any) => {
+
+  res.redirect(baseUrl + '/index.html');
 });
-app.get('/index.html',ensureLoggedIn('/login'), (req: any, res: any) => {
+app.get('/index.html',ensureLoggedIn(baseUrl + '/login'), (req: any, res: any) => {
+
   console.log("Se invocó /index.html")
   res.sendFile(path.join(frontStaticDir, 'index.html'));
 });
@@ -115,7 +128,8 @@ app.use(express.static(frontStaticDir));
 
 
 import api from './routes/bff-api.js';
-import { checkJWT } from './utils/jwtUtils.js'
+const{ checkJWT } = await import('./utils/jwtUtils.js');
+
 app.use(express.json());
 app.use('/api',api);
 
@@ -124,7 +138,7 @@ app.use('/api',api);
 // rutas de login
 app.get(
   '/login',
-  ensureLoggedOut('/logout'),
+  ensureLoggedOut(baseUrl + '/logout'),
   passport.authenticate('oidc',{scope:"openid"})//,state:"12345"})
 )
 
@@ -146,8 +160,8 @@ app.get('/logout', (req, res) => {
       console.log("session.id: " + req.session.id);
   
       let result = passport.authenticate('oidc',{ 
-           successRedirect: '/index.html',
-           failureRedirect: '/login' 
+           successRedirect: baseUrl + '/index.html',
+           failureRedirect: baseUrl + '/login' 
           })(req, res, next)
       console.log("result: " + result);    
   }
@@ -166,6 +180,6 @@ app.get('/logout', (req, res) => {
 
 
 const httpServer = http.createServer(app)
-    httpServer.listen(8888,() =>{
-        console.log(`Http Server Running on port 8888`)
+    httpServer.listen(80,() =>{
+        console.log(`Http Server Running on port 80`)
   })

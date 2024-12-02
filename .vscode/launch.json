@@ -19,10 +19,14 @@
             "type": "node",
             "request": "launch",
             "name": "Launch TS",
+            "cwd": "${workspaceFolder}/front-ts",
             "program": "${workspaceFolder}/front-ts/src/app.ts",
+            //"program": "src/app.ts node_env=development",
             "preLaunchTask": "tsc: build - front-ts/tsconfig.json",
             "outFiles": ["${workspaceFolder}/front-ts/dist/**/*.js"]
         },
+
+ 
         {
             "type": "node",
             "request": "launch",
