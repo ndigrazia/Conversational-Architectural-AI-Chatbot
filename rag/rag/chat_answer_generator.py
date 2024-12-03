@@ -14,11 +14,13 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_community.chat_message_histories import ChatMessageHistory
+from utils.ai import create_llm
 
 load_dotenv()
 
 class ChatAnswerGenerator:
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+    #llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+    llm = create_llm()
     number_of_results_default = 4
     
     contextualize_q_system_prompt = os.getenv("SYSTEM_PROMPT_TO_CONTEXTUALIZE")
